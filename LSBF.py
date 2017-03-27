@@ -12,9 +12,9 @@ def setArrayBit( outerArray, bitPosition ):
 
 emptyArray = bitarray(2**16)
 emptyArray.setall(False)
-bloomArray = [None]
+bloomArray = emptyArray
 
-for count in range( 0, 65536 ):
+for count in range( 1, 65536 ):
     bloomArray.append(emptyArray)
 
 
