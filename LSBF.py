@@ -4,16 +4,18 @@ import math
 from bitarray import bitarray
 
 def getArrayPos( input ):
-	return ( int(bin(int(input, 16))[2:].zfill(8)[0:16], 2), int(bin(int(input, 16))[2:].zfill(8)[16:32], 2) )
+    return ( int(bin(int(input, 16))[2:].zfill(8)[0:16], 2), int(bin(int(input, 16))[2:].zfill(8)[16:32], 2) )
 
 def setArrayBit( outerArray, bitPosition ):
-        return True
+    outerArray[bitPosition[0]][bitPosition[1]] = True
+    return
 
 emptyArray = bitarray(2**16)
+emptyArray.setall(False)
 bloomArray = [None]
 
-for count in xrange( 65536 ):
-	bloomArray.append(emptyArray)
+for count in range( 0, 65536 ):
+    bloomArray.append(emptyArray)
 
 
 #hashlib.md5('a'.encode('utf-8'))
@@ -43,13 +45,13 @@ binary = m5_a.digest()
 #print(len(bin(int(hex, 16))[2:].zfill(8)))
 
 #print(bin(int(hex, 16)))
-print("decimal here:")
-print(int(bin(int(hex, 16))[2:].zfill(8)[0:16], 2))
-print(int(bin(int(hex, 16))[2:].zfill(8)[16:32], 2))
-
-print("test function:")
-print(getArrayPos(hex))
-
-myVar = getArrayPos(hex)
-
-print(myVar[1])
+#print("decimal here:")
+#print(int(bin(int(hex, 16))[2:].zfill(8)[0:16], 2))
+#print(int(bin(int(hex, 16))[2:].zfill(8)[16:32], 2))
+#
+#print("test function:")
+#print(getArrayPos(hex))
+#
+#myVar = getArrayPos(hex)
+#
+#print(myVar[1])
