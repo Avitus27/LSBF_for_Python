@@ -10,12 +10,20 @@ def setArrayBit( outerArray, bitPosition ):
     outerArray[bitPosition[0]][bitPosition[1]] = True
     return
 
-emptyArray = bitarray(2**16)
-emptyArray.setall(False)
-bloomArray = []
+def createBloomArray():
+    emptyArray = bitarray(2**16)
+    emptyArray.setall(False)
+    bloomArray = []
 
-for count in range( 1, 65536 ):
-    bloomArray.append(emptyArray)
+    for count in range( 0, 65536 ):
+        bloomArray.append(emptyArray)
+
+    return bloomArray
+
+def getMD5HashPosition( input ):
+    m5_a = hashlib.md5()
+    m5_a.update(input.encode('utf-8'))
+    return getArrayPos(m5_a.hexdigest())
 
 
 #hashlib.md5('a'.encode('utf-8'))
