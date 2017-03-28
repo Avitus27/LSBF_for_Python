@@ -21,13 +21,33 @@ def createBloomArray():
     return bloomArray
 
 def getMD5HashPosition( input ):
-    m5_a = hashlib.md5()
-    m5_a.update(input.encode('utf-8'))
-    return getArrayPos(m5_a.hexdigest())
+    m5 = hashlib.md5()
+    m5.update(input.encode('utf-8'))
+    return getArrayPos(m5.hexdigest())
 
 def getMD5HashPresence( bloomArray, input ):
     inputPosition = getMD5HashPosition( input )
     return bloomArray[inputPosition[0]][inputPosition[1]]
+
+def getSHA1HashPosition( input ):
+    sha1 = hashlib.sha1()
+    sha1.update(input.encode('utf-8'))
+    return getArrayPos(sha1.hexdigest())
+
+def getSHA1HashPresence( bloomArray, input ):
+    inputPosition = getSHA1HashPosition( input )
+    return bloomArray[inputPosition[0]][inputPosition[1]]
+
+
+def addToBloom( bloomArray, input ):
+    setArrayBit(bloomArray, getMD5HashPosition(input))
+    setArrayBit(bloomArray, getSHA1HashPosition(input))
+
+def checkInBloom( bloomArray, input ):
+    if getMD5HashPresence( bloomArray, input ):
+        return getSHA1HashPresence( bloomArray, input )
+    return False
+
 
 #hashlib.md5('a'.encode('utf-8'))
 #hashlib.sha512('a')
