@@ -22,7 +22,7 @@ def createBloomArray():
 
 def getMD5HashPosition( input ):
     m5 = hashlib.md5()
-    m5.update(input.encode('utf-8'))
+    m5.update(str(input.encode('utf-8')))
     return getArrayPos(m5.hexdigest())
 
 def getMD5HashPresence( bloomArray, input ):
@@ -31,7 +31,7 @@ def getMD5HashPresence( bloomArray, input ):
 
 def getSHA1HashPosition( input ):
     sha1 = hashlib.sha1()
-    sha1.update(input.encode('utf-8'))
+    sha1.update(str(input.encode('utf-8')))
     return getArrayPos(sha1.hexdigest())
 
 def getSHA1HashPresence( bloomArray, input ):
@@ -60,9 +60,9 @@ def localityBloomCheck( bloomArray, input, range, resolution ):
 
 def testFunc():
     myBloom = createBloomArray()
-    print("Should be False: ", checkInBloom(myBloom, 'test'))
+    print("Should be False: " + checkInBloom(myBloom, 'test'))
     addToBloom(myBloom, 'test')
-    print("Should be True: ", checkInBloom(myBloom, 'test'))
+    print("Should be True: " + checkInBloom(myBloom, 'test'))
 
 
 
