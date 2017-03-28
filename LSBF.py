@@ -69,9 +69,10 @@ def localityBloomCheck( bloomArray, input, range, resolution ):
 
 def testFunc():
     myBloom = createBloomArray()
-    print("Should be False: " + str(checkInBloom(myBloom, 'test')))
-    addToBloom(myBloom, 'test')
-    print("Should be True: " + str(checkInBloom(myBloom, 'test')))
+    print("Should be False: " + str(checkInBloom(myBloom, '5')))
+    addToBloom(myBloom, '5')
+    print("Should be True: " + str(checkInBloom(myBloom, '5')))
+    print("Should be True: " + str(checkInBloom(myBloom, '5.0000')))
 
 
 
