@@ -48,9 +48,15 @@ def checkInBloom( bloomArray, input ):
         return getSHA1HashPresence( bloomArray, input )
     return False
 
-
-
-
+def localityBloomCheck( bloomArray, input, range, resolution ):
+    if range < resolution:
+        return checkInBloom( bloomArray, input )
+    else:
+        if not checkInBloom( bloomArray, input - range):
+            if not checkInBloom( bloomArray, input + range):
+                if not localityBloomCheck( bloomArray, input, range - resolution, resolution ):
+                    return False
+        return True
 
 def testFunc():
     myBloom = createBloomArray()
