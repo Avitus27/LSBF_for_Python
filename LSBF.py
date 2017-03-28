@@ -6,8 +6,8 @@ from bitarray import bitarray
 def getArrayPos( input ):
     return ( int(bin(int(input, 16))[2:].zfill(8)[0:16], 2), int(bin(int(input, 16))[2:].zfill(8)[16:32], 2) )
 
-def setArrayBit( outerArray, bitPosition ):
-    outerArray[bitPosition[0]][bitPosition[1]] = True
+def setArrayBit( bloomArray, bitPosition ):
+    bloomArray[bitPosition[0]][bitPosition[1]] = True
     return
 
 def createBloomArray():
@@ -25,6 +25,9 @@ def getMD5HashPosition( input ):
     m5_a.update(input.encode('utf-8'))
     return getArrayPos(m5_a.hexdigest())
 
+def getMD5HashPresence( bloomArray, input ):
+    inputPosition = getMD5HashPosition( input )
+    return bloomArray[inputPosition[0]][inputPosition[1]]
 
 #hashlib.md5('a'.encode('utf-8'))
 #hashlib.sha512('a')
@@ -32,13 +35,6 @@ def getMD5HashPosition( input ):
 #hashlib.md5('a'.encode('utf-8')).digest()
 
 #print hashlib.sha512('a').hexdigest()
-
-m5_a = hashlib.md5()
-
-m5_a.update('a'.encode('utf-8'))
-
-hex = m5_a.hexdigest()
-binary = m5_a.digest()
 
 #print(hex)
 #print(hex[0:16])
