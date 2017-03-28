@@ -49,6 +49,18 @@ def checkInBloom( bloomArray, input ):
     return False
 
 
+
+
+
+def testFunc():
+    myBloom = createBloomArray()
+    print("Should be False: ", checkInBloom(myBloom, 'test'))
+    addToBloom(myBloom, 'test')
+    print("Should be True: ", checkInBloom(myBloom, 'test'))
+
+
+
+
 #hashlib.md5('a'.encode('utf-8'))
 #hashlib.sha512('a')
 
