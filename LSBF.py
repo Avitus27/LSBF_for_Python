@@ -3,6 +3,10 @@ import math
 
 from bitarray import bitarray
 
+FLOAT_PRECISION = 2
+
+floatString = "{0:." + str(FLOAT_PRECISION) + "f}"
+
 def getArrayPos( input ):
     return ( int(bin(int(input, 16))[2:].zfill(8)[0:16], 2), int(bin(int(input, 16))[2:].zfill(8)[16:32], 2) )
 
@@ -40,10 +44,12 @@ def getSHA1HashPresence( bloomArray, input ):
 
 
 def addToBloom( bloomArray, input ):
+    input = floatString.format(input)
     setArrayBit(bloomArray, getMD5HashPosition(input))
     setArrayBit(bloomArray, getSHA1HashPosition(input))
 
 def checkInBloom( bloomArray, input ):
+    input = floatString.format(input)
     if getMD5HashPresence( bloomArray, input ):
         return getSHA1HashPresence( bloomArray, input )
     return False
@@ -57,6 +63,9 @@ def localityBloomCheck( bloomArray, input, range, resolution ):
                 if not localityBloomCheck( bloomArray, input, range - resolution, resolution ):
                     return False
         return True
+
+
+
 
 def testFunc():
     myBloom = createBloomArray()
