@@ -30,8 +30,6 @@ class LocalitySensitiveBloomFilter:
         for count in range( 0, 65536 ):
             self.bloomArray.append(emptyArray)
 
-        return self
-
     def createBloomArray( floatPrecision, hashes, bloomRange, resolution ):
         if not floatPrecision >= 0:
             return None # floatPrecision needs to be positive
@@ -67,9 +65,9 @@ class LocalitySensitiveBloomFilter:
 
     def checkInBloom( bloomArray, input ):
         input = floatString.format(input)
-        if getMD5HashPresence( bloomArray, input ):
+        if bloomArray.getMD5HashPresence( input ):
             #TODO What happens when there's only one hash
-            return getSHA1HashPresence( bloomArray, input )
+            return bloomArray.getSHA1HashPresence( input )
         return False
 
     def localityBloomCheck( bloomArray, input, range ):
