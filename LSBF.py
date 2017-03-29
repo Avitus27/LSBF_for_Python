@@ -17,10 +17,10 @@ def setArrayBit( bloomArray, bitPosition ):
     bloomArray[bitPosition[0]][bitPosition[1]] = True
     return
 
-def createBloomArray( floatPrecision, hashes, range, resolution ):
+def createBloomArray( floatPrecision, hashes, bloomRange, resolution ):
     FLOAT_PRECISION = floatPrecision
     NUM_HASHES = hashes
-    LOCALITY_RANGE = range
+    LOCALITY_RANGE = bloomRange
     LOCALITY_RESOLUTION = resolution
     emptyArray = bitarray(2**16)
     emptyArray.setall(False)
