@@ -71,46 +71,9 @@ def localityBloomCheck( bloomArray, input, range, resolution ):
                     return False
         return True
 
-
-
-
 def testFunc():
     myBloom = createBloomArray( 2, 2, 10, 0.5 )
     print("Should be False: " + str(checkInBloom(myBloom, 5)))
     addToBloom(myBloom, 5)
     print("Should be True: " + str(checkInBloom(myBloom, 5)))
     print("Should be True: " + str(checkInBloom(myBloom, 5.0000)))
-
-
-
-
-#hashlib.md5('a'.encode('utf-8'))
-#hashlib.sha512('a')
-
-#hashlib.md5('a'.encode('utf-8')).digest()
-
-#print hashlib.sha512('a').hexdigest()
-
-#print(hex)
-#print(hex[0:16])
-#print(hex[16:32])
-
-
-#print(len(binary))
-#print(binary)
-#print(binary[0:8])
-#print(binary[8:16])
-
-#print(len(bin(int(hex, 16))[2:].zfill(8)))
-
-#print(bin(int(hex, 16)))
-#print("decimal here:")
-#print(int(bin(int(hex, 16))[2:].zfill(8)[0:16], 2))
-#print(int(bin(int(hex, 16))[2:].zfill(8)[16:32], 2))
-#
-#print("test function:")
-#print(getArrayPos(hex))
-#
-#myVar = getArrayPos(hex)
-#
-#print(myVar[1])
