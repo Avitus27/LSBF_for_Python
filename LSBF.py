@@ -59,7 +59,7 @@ def localityBloomCheck( bloomArray, input ):
     else:
         if not checkInBloom( bloomArray, input - LOCALITY_RANGE):
             if not checkInBloom( bloomArray, input + LOCALITY_RANGE):
-                if not localityBloomCheck( bloomArray, input, LOCALITY_RANGE - LOCALITY_RESOLUTION, LOCALITY_RESOLUTION ):
+                if not localityBloomCheck( bloomArray, input ):
                     return False
         return True
 
