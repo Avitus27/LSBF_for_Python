@@ -52,14 +52,14 @@ def checkInBloom( bloomArray, input ):
         return getSHA1HashPresence( bloomArray, input )
     return False
 
-def localityBloomCheck( bloomArray, input ):
+def localityBloomCheck( bloomArray, input, range ):
     #TODO When there's only one hash
-    if LOCALITY_RANGE < LOCALITY_RESOLUTION:
+    if range < LOCALITY_RESOLUTION:
         return checkInBloom( bloomArray, input )
     else:
-        if not checkInBloom( bloomArray, input - LOCALITY_RANGE):
-            if not checkInBloom( bloomArray, input + LOCALITY_RANGE):
-                if not localityBloomCheck( bloomArray, input ):
+        if not checkInBloom( bloomArray, input - range):
+            if not checkInBloom( bloomArray, input + range):
+                if not localityBloomCheck( bloomArray, input, range ):
                     return False
         return True
 
