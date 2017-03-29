@@ -3,6 +3,7 @@ import math
 
 from bitarray import bitarray
 
+#Pseudo-constants
 FLOAT_PRECISION = 0
 NUM_HASHES = 0
 LOCALITY_RANGE = 0
@@ -10,15 +11,13 @@ LOCALITY_RESOLUTION = 0
 
 floatString = "{0:." + str(FLOAT_PRECISION) + "f}"
 
-def getArrayPos( input ):
-    return ( int(bin(int(input, 16))[2:].zfill(8)[0:16], 2), int(bin(int(input, 16))[2:].zfill(8)[16:32], 2) )
-
-def setArrayBit( bloomArray, bitPosition ):
-    bloomArray[bitPosition[0]][bitPosition[1]] = True
-    return
-
+#Bloom Filter Basic Operations
 def createBloomArray( floatPrecision, hashes, bloomRange, resolution ):
+    if not floatPrecision >= 0:
+        return None # floatPrecision needs to be positive
     FLOAT_PRECISION = floatPrecision
+    if not hashes > 0:
+        return None # We need at lest 1 hashing algorithm, upper limit is TODO
     NUM_HASHES = hashes
     LOCALITY_RANGE = bloomRange
     LOCALITY_RESOLUTION = resolution
@@ -31,6 +30,41 @@ def createBloomArray( floatPrecision, hashes, bloomRange, resolution ):
 
     return bloomArray
 
+def setArrayBit( bloomArray, bitPosition ):
+    bloomArray[bitPosition[0]][bitPosition[1]] = True
+    return
+
+def getArrayPos( input ):
+    #This takes the first 16 + 16 bits of the hash and turns it into a tuple, the position of a bit
+    return ( int(bin(int(input, 16))[2:].zfill(8)[0:16], 2), int(bin(int(input, 16))[2:].zfill(8)[16:32], 2) )
+
+def addToBloom( bloomArray, input ):
+    input = floatString.format(input)
+    setArrayBit(bloomArray, getMD5HashPosition(input))
+    if NUM_HASHES > 1:
+        setArrayBit(bloomArray, getSHA1HashPosition(input))
+
+
+def checkInBloom( bloomArray, input ):
+    input = floatString.format(input)
+    if getMD5HashPresence( bloomArray, input ):
+        #TODO What happens when there's only one hash
+        return getSHA1HashPresence( bloomArray, input )
+    return False
+
+def localityBloomCheck( bloomArray, input ):
+    #TODO When there's only one hash
+    if LOCALITY_RANGE < LOCALITY_RESOLUTION:
+        return checkInBloom( bloomArray, input )
+    else:
+        if not checkInBloom( bloomArray, input - LOCALITY_RANGE):
+            if not checkInBloom( bloomArray, input + LOCALITY_RANGE):
+                if not localityBloomCheck( bloomArray, input, LOCALITY_RANGE - LOCALITY_RESOLUTION, LOCALITY_RESOLUTION ):
+                    return False
+        return True
+
+#Hash Functions
+#MD5 Based
 def getMD5HashPosition( input ):
     m5 = hashlib.md5()
     m5.update(str(input).encode('utf-8'))
@@ -40,6 +74,7 @@ def getMD5HashPresence( bloomArray, input ):
     inputPosition = getMD5HashPosition( input )
     return bloomArray[inputPosition[0]][inputPosition[1]]
 
+#SHA1 Based
 def getSHA1HashPosition( input ):
     sha1 = hashlib.sha1()
     sha1.update(str(input).encode('utf-8'))
@@ -50,27 +85,6 @@ def getSHA1HashPresence( bloomArray, input ):
     return bloomArray[inputPosition[0]][inputPosition[1]]
 
 
-def addToBloom( bloomArray, input ):
-    input = floatString.format(input)
-    setArrayBit(bloomArray, getMD5HashPosition(input))
-    setArrayBit(bloomArray, getSHA1HashPosition(input))
-
-def checkInBloom( bloomArray, input ):
-    input = floatString.format(input)
-    if getMD5HashPresence( bloomArray, input ):
-        return getSHA1HashPresence( bloomArray, input )
-    return False
-
-def localityBloomCheck( bloomArray, input, range, resolution ):
-    if range < resolution:
-        return checkInBloom( bloomArray, input )
-    else:
-        if not checkInBloom( bloomArray, input - range):
-            if not checkInBloom( bloomArray, input + range):
-                if not localityBloomCheck( bloomArray, input, range - resolution, resolution ):
-                    return False
-        return True
-
 
 
 
@@ -80,7 +94,7 @@ def testFunc():
     addToBloom(myBloom, 5)
     print("Should be True: " + str(checkInBloom(myBloom, 5)))
     print("Should be True: " + str(checkInBloom(myBloom, 5.0000)))
-
+    print("Should be True: " + str(localityBloomCheck(myBloom, 3.0000)))
 
 
 
