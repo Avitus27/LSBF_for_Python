@@ -3,7 +3,10 @@ import math
 
 from bitarray import bitarray
 
-FLOAT_PRECISION = 2
+FLOAT_PRECISION = 0
+NUM_HASHES = 0
+LOCALITY_RANGE = 0
+LOCALITY_RESOLUTION = 0
 
 floatString = "{0:." + str(FLOAT_PRECISION) + "f}"
 
@@ -14,7 +17,11 @@ def setArrayBit( bloomArray, bitPosition ):
     bloomArray[bitPosition[0]][bitPosition[1]] = True
     return
 
-def createBloomArray():
+def createBloomArray( floatPrecision, hashes, range, resolution ):
+    FLOAT_PRECISION = floatPrecision
+    NUM_HASHES = hashes
+    LOCALITY_RANGE = range
+    LOCALITY_RESOLUTION = resolution
     emptyArray = bitarray(2**16)
     emptyArray.setall(False)
     bloomArray = []
@@ -68,7 +75,7 @@ def localityBloomCheck( bloomArray, input, range, resolution ):
 
 
 def testFunc():
-    myBloom = createBloomArray()
+    myBloom = createBloomArray( 2, 2, 10, 0.5 )
     print("Should be False: " + str(checkInBloom(myBloom, 5)))
     addToBloom(myBloom, 5)
     print("Should be True: " + str(checkInBloom(myBloom, 5)))
