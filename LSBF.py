@@ -58,9 +58,9 @@ class LocalitySensitiveBloomFilter:
 
     def addToBloom( bloomArray, input ):
         input = floatString.format(input)
-        bloomArray.setArrayBit(getMD5HashPosition(input))
+        bloomArray.setArrayBit(bloomArray.getMD5HashPosition(input))
         if NUM_HASHES > 1:
-            bloomArray.setArrayBit(getSHA1HashPosition(input))
+            bloomArray.setArrayBit(bloomArray.getSHA1HashPosition(input))
 
 
     def checkInBloom( bloomArray, input ):
@@ -73,11 +73,11 @@ class LocalitySensitiveBloomFilter:
     def localityBloomCheck( bloomArray, input, range ):
         #TODO When there's only one hash
         if range < LOCALITY_RESOLUTION:
-            return checkInBloom( bloomArray, input )
+            return bloomArray.checkInBloom( input )
         else:
-            if not checkInBloom( bloomArray, input - range):
-                if not checkInBloom( bloomArray, input + range):
-                    if not localityBloomCheck( bloomArray, input, range ):
+            if not bloomArray.checkInBloom( input - range):
+                if not bloomArray.checkInBloom( input + range):
+                    if not bloomArray.localityBloomCheck( input, range ):
                         return False
             return True
 
