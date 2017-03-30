@@ -6,7 +6,7 @@ def testFunc():
     myBloom.addToBloom(5)
     print("Should be True: " + str(myBloom.checkInBloom(5)))
     print("Should be True: " + str(myBloom.checkInBloom(5.000)))
-    print("Should be True: " + str(myBloom.localityBloomCheck(3.0000)))
+    print("Should be True: " + str(myBloom.localityBloomCheck(3.0000, myBloom.LOCALITY_RANGE )))
 
 testFunc()
 
