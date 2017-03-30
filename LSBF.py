@@ -89,7 +89,7 @@ class LocalitySensitiveBloomFilter:
         return getArrayPos(m5.hexdigest())
 
     def getMD5HashPresence( bloomArray, input ):
-        inputPosition = getMD5HashPosition( input )
+        inputPosition = bloomArray.getMD5HashPosition( input )
         return bloomArray[inputPosition[0]][inputPosition[1]]
 
     #SHA1 Based
