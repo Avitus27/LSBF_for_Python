@@ -3,14 +3,6 @@ import math
 
 from bitarray import bitarray
 
-#Pseudo-constants
-FLOAT_PRECISION = 0
-NUM_HASHES = 0
-LOCALITY_RANGE = 0
-LOCALITY_RESOLUTION = 0
-
-floatString = "{0:." + str(FLOAT_PRECISION) + "f}"
-
 class LocalitySensitiveBloomFilter:
 
     #Bloom Filter Basic Operations
@@ -23,6 +15,7 @@ class LocalitySensitiveBloomFilter:
         self.NUM_HASHES = hashes
         self.LOCALITY_RANGE = bloomRange
         self.LOCALITY_RESOLUTION = resolution
+        self.floatString = "{0:." + str(floatPrecision) + "f}"
         emptyArray = bitarray(2**16)
         emptyArray.setall(False)
         self.bloomArray = []
@@ -57,14 +50,14 @@ class LocalitySensitiveBloomFilter:
         return ( int(bin(int(input, 16))[2:].zfill(8)[0:16], 2), int(bin(int(input, 16))[2:].zfill(8)[16:32], 2) )
 
     def addToBloom( bloomArray, input ):
-        input = floatString.format(input)
+        input = bloomArray.floatString.format(input)
         bloomArray.setArrayBit(bloomArray.getMD5HashPosition(input))
-        if NUM_HASHES > 1:
+        if bloomArray.NUM_HASHES > 1:
             bloomArray.setArrayBit(bloomArray.getSHA1HashPosition(input))
 
 
     def checkInBloom( bloomArray, input ):
-        input = floatString.format(input)
+        input = bloomArray.floatString.format(input)
         if bloomArray.getMD5HashPresence( input ):
             #TODO What happens when there's only one hash
             return bloomArray.getSHA1HashPresence( input )
@@ -72,7 +65,7 @@ class LocalitySensitiveBloomFilter:
 
     def localityBloomCheck( bloomArray, input, range ):
         #TODO When there's only one hash
-        if (range < bloomArray.LOCALITY_RESOLUTION) or (bloomArray.LOCALITY_RESOLUTION == 0):
+        if (range < bloomArray.LOCALITY_RESOLUTION):
             return bloomArray.checkInBloom( input )
         else:
             if not bloomArray.checkInBloom( input - range ):
