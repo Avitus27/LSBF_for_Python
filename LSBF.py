@@ -77,7 +77,7 @@ class LocalitySensitiveBloomFilter:
         else:
             if not bloomArray.checkInBloom( input - bloomArray.LOCALITY_RANGE ):
                 if not bloomArray.checkInBloom( input + bloomArray.LOCALITY_RANGE ):
-                    if not bloomArray.localityBloomCheck( input, bloomArray.range - bloomArray.LOCALITY_RESOLUTION ):
+                    if not bloomArray.localityBloomCheck( input, bloomArray.LOCALITY_RANGE - bloomArray.LOCALITY_RESOLUTION ):
                         return False
             return True
 
