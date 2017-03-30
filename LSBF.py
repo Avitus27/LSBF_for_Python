@@ -49,7 +49,7 @@ class LocalitySensitiveBloomFilter:
         return bloomArray
 
     def setArrayBit( bloomArray, bitPosition ):
-        bloomArray[bitPosition[0]][bitPosition[1]] = True
+        bloomArray.bloomArray[bitPosition[0]][bitPosition[1]] = True
         return
 
     def getArrayPos( bloomArray, input ):
@@ -58,9 +58,9 @@ class LocalitySensitiveBloomFilter:
 
     def addToBloom( bloomArray, input ):
         input = floatString.format(input)
-        setArrayBit(bloomArray, getMD5HashPosition(input))
+        bloomArray.setArrayBit(getMD5HashPosition(input))
         if NUM_HASHES > 1:
-            setArrayBit(bloomArray, getSHA1HashPosition(input))
+            bloomArray.setArrayBit(getSHA1HashPosition(input))
 
 
     def checkInBloom( bloomArray, input ):
