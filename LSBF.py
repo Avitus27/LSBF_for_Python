@@ -83,7 +83,7 @@ class LocalitySensitiveBloomFilter:
 
     #Hash Functions
     #MD5 Based
-    def getMD5HashPosition( input ):
+    def getMD5HashPosition( bloomArray, input ):
         m5 = hashlib.md5()
         m5.update(str(input).encode('utf-8'))
         return getArrayPos(m5.hexdigest())
@@ -93,13 +93,13 @@ class LocalitySensitiveBloomFilter:
         return bloomArray[inputPosition[0]][inputPosition[1]]
 
     #SHA1 Based
-    def getSHA1HashPosition( input ):
+    def getSHA1HashPosition( bloomArray, input ):
         sha1 = hashlib.sha1()
         sha1.update(str(input).encode('utf-8'))
         return getArrayPos(sha1.hexdigest())
 
     def getSHA1HashPresence( bloomArray, input ):
-        inputPosition = getSHA1HashPosition( input )
+        inputPosition = bloomArray.getSHA1HashPosition( input )
         return bloomArray[inputPosition[0]][inputPosition[1]]
 
 #hashlib.md5('a'.encode('utf-8'))
