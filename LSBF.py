@@ -23,24 +23,6 @@ class LocalitySensitiveBloomFilter:
         for count in range( 0, 65536 ):
             self.bloomArray.append(emptyArray)
 
-    #def createBloomArray( floatPrecision, hashes, bloomRange, resolution ):
-    #    if not floatPrecision >= 0:
-    #        return None # floatPrecision needs to be positive
-    #    FLOAT_PRECISION = floatPrecision
-    #    if not hashes > 0:
-    #        return None # We need at lest 1 hashing algorithm, upper limit is TODO
-    #    NUM_HASHES = hashes
-    #    LOCALITY_RANGE = bloomRange
-    #    LOCALITY_RESOLUTION = resolution
-    #    emptyArray = bitarray(2**16)
-    #    emptyArray.setall(False)
-    #    bloomArray = []
-
-    #    for count in range( 0, 65536 ):
-    #        bloomArray.append(emptyArray)
-
-    #    return bloomArray
-
     def setArrayBit( bloomArray, bitPosition ):
         bloomArray.bloomArray[bitPosition[0]][bitPosition[1]] = True
         return
@@ -54,7 +36,6 @@ class LocalitySensitiveBloomFilter:
         bloomArray.setArrayBit(bloomArray.getMD5HashPosition(input))
         if bloomArray.NUM_HASHES > 1:
             bloomArray.setArrayBit(bloomArray.getSHA1HashPosition(input))
-
 
     def checkInBloom( bloomArray, input ):
         input = bloomArray.floatString.format(input)
@@ -94,34 +75,3 @@ class LocalitySensitiveBloomFilter:
     def getSHA1HashPresence( bloomArray, input ):
         inputPosition = bloomArray.getSHA1HashPosition( input )
         return bloomArray.bloomArray[inputPosition[0]][inputPosition[1]]
-
-#hashlib.md5('a'.encode('utf-8'))
-#hashlib.sha512('a')
-
-#hashlib.md5('a'.encode('utf-8')).digest()
-
-#print hashlib.sha512('a').hexdigest()
-
-#print(hex)
-#print(hex[0:16])
-#print(hex[16:32])
-
-
-#print(len(binary))
-#print(binary)
-#print(binary[0:8])
-#print(binary[8:16])
-
-#print(len(bin(int(hex, 16))[2:].zfill(8)))
-
-#print(bin(int(hex, 16)))
-#print("decimal here:")
-#print(int(bin(int(hex, 16))[2:].zfill(8)[0:16], 2))
-#print(int(bin(int(hex, 16))[2:].zfill(8)[16:32], 2))
-#
-#print("test function:")
-#print(getArrayPos(hex))
-#
-#myVar = getArrayPos(hex)
-#
-#print(myVar[1])
