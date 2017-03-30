@@ -30,23 +30,23 @@ class LocalitySensitiveBloomFilter:
         for count in range( 0, 65536 ):
             self.bloomArray.append(emptyArray)
 
-    def createBloomArray( floatPrecision, hashes, bloomRange, resolution ):
-        if not floatPrecision >= 0:
-            return None # floatPrecision needs to be positive
-        FLOAT_PRECISION = floatPrecision
-        if not hashes > 0:
-            return None # We need at lest 1 hashing algorithm, upper limit is TODO
-        NUM_HASHES = hashes
-        LOCALITY_RANGE = bloomRange
-        LOCALITY_RESOLUTION = resolution
-        emptyArray = bitarray(2**16)
-        emptyArray.setall(False)
-        bloomArray = []
+    #def createBloomArray( floatPrecision, hashes, bloomRange, resolution ):
+    #    if not floatPrecision >= 0:
+    #        return None # floatPrecision needs to be positive
+    #    FLOAT_PRECISION = floatPrecision
+    #    if not hashes > 0:
+    #        return None # We need at lest 1 hashing algorithm, upper limit is TODO
+    #    NUM_HASHES = hashes
+    #    LOCALITY_RANGE = bloomRange
+    #    LOCALITY_RESOLUTION = resolution
+    #    emptyArray = bitarray(2**16)
+    #    emptyArray.setall(False)
+    #    bloomArray = []
 
-        for count in range( 0, 65536 ):
-            bloomArray.append(emptyArray)
+    #    for count in range( 0, 65536 ):
+    #        bloomArray.append(emptyArray)
 
-        return bloomArray
+    #    return bloomArray
 
     def setArrayBit( bloomArray, bitPosition ):
         bloomArray.bloomArray[bitPosition[0]][bitPosition[1]] = True
@@ -72,7 +72,7 @@ class LocalitySensitiveBloomFilter:
 
     def localityBloomCheck( bloomArray, input, range ):
         #TODO When there's only one hash
-        if range < LOCALITY_RESOLUTION:
+        if (range < bloomArray.LOCALITY_RESOLUTION) or (bloomArray.LOCALITY_RESOLUTION == 0):
             return bloomArray.checkInBloom( input )
         else:
             if not bloomArray.checkInBloom( input - bloomArray.LOCALITY_RANGE ):
