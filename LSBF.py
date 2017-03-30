@@ -52,7 +52,7 @@ class LocalitySensitiveBloomFilter:
         bloomArray[bitPosition[0]][bitPosition[1]] = True
         return
 
-    def getArrayPos( input ):
+    def getArrayPos( bloomArray, input ):
         #This takes the first 16 + 16 bits of the hash and turns it into a tuple, the position of a bit
         return ( int(bin(int(input, 16))[2:].zfill(8)[0:16], 2), int(bin(int(input, 16))[2:].zfill(8)[16:32], 2) )
 
@@ -86,7 +86,7 @@ class LocalitySensitiveBloomFilter:
     def getMD5HashPosition( bloomArray, input ):
         m5 = hashlib.md5()
         m5.update(str(input).encode('utf-8'))
-        return getArrayPos(m5.hexdigest())
+        return bloomArray.getArrayPos(m5.hexdigest())
 
     def getMD5HashPresence( bloomArray, input ):
         inputPosition = bloomArray.getMD5HashPosition( input )
@@ -96,7 +96,7 @@ class LocalitySensitiveBloomFilter:
     def getSHA1HashPosition( bloomArray, input ):
         sha1 = hashlib.sha1()
         sha1.update(str(input).encode('utf-8'))
-        return getArrayPos(sha1.hexdigest())
+        return bloomArray.getArrayPos(sha1.hexdigest())
 
     def getSHA1HashPresence( bloomArray, input ):
         inputPosition = bloomArray.getSHA1HashPosition( input )
