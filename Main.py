@@ -7,7 +7,7 @@ def testFunc():
     myBloom.addToBloom(5)
     print("Should be True: " + str(myBloom.checkInBloom(5)))
     print("Should be True: " + str(myBloom.checkInBloom(5.000)))
-    print("Should be True: " + str(myBloom.localityBloomCheck(3.0000, myBloom.LOCALITY_RANGE )))
+    print("Should be True: " + str(myBloom.localityBloomCheck(3.0000)))
 
 def randomTest():
 	myBloom = LSBF.LocalitySensitiveBloomFilter(2, 2, 5, 1)
@@ -24,7 +24,7 @@ print("randomTest(): ")
 myBloom = randomTest()
 for i in xrange(10):
 	inputFloat = float(raw_input("test a number for approximate presence: "))
-	if myBloom.localityBloomCheck(inputFloat, 5):
+	if myBloom.localityBloomCheck(inputFloat):
 		print("Input was in or near a value in the bloom filter")
 	else:
 		print("Input was not near a value in the bloom filter")
