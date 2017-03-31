@@ -12,8 +12,9 @@ def testFunc():
 def randomTest():
 	myBloom = LSBF.LocalitySensitiveBloomFilter(2, 2, 5, 1)
 	for i in xrange(100):
-		myBloom.addToBloom(random.randrange(0, 10000))
-		print(str(i))
+		x = random.randrange(0, 10000)
+		myBloom.addToBloom(x)
+		print(str(x))
 	return myBloom
 
 print("testFunc(): ")
