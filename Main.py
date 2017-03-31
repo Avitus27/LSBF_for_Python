@@ -19,6 +19,7 @@ print("testFunc(): ")
 testFunc()
 
 print("randomTest(): ")
+myBloom = randomTest()
 for i in xrange(10):
 	inputFloat = float(raw_input("test a number for approximate presence: "))
 	if myBloom.localityBloomCheck(inputFloat, 5):
