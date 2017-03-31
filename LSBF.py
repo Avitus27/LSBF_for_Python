@@ -44,8 +44,8 @@ class LocalitySensitiveBloomFilter:
             return bloomArray.getSHA1HashPresence( input )
         return False
 
-    def localityBloomCheck( bloomArray, input, range=0 ):
-        if range == 0:
+    def localityBloomCheck( bloomArray, input, range=0, recursionDepth=0 ):
+        if (range == 0) and not (recursionDepth == bloomArray.LOCALITY_RANGE/bloomArray.LOCALITY_RESOLUTION):
             range = bloomArray.LOCALITY_RANGE
         #TODO When there's only one hash
         if (range < bloomArray.LOCALITY_RESOLUTION):
@@ -53,7 +53,7 @@ class LocalitySensitiveBloomFilter:
         else:
             if not bloomArray.checkInBloom( input - range ):
                 if not bloomArray.checkInBloom( input + range ):
-                    if not bloomArray.localityBloomCheck( input, range - bloomArray.LOCALITY_RESOLUTION ):
+                    if not bloomArray.localityBloomCheck( input, range - bloomArray.LOCALITY_RESOLUTION, recursionDepth+1 ):
                         return False
             return True
 
