@@ -13,7 +13,7 @@ class LocalitySensitiveBloomFilter:
         self.FLOAT_PRECISION = floatPrecision
         if not hashes > 0:
             return None
-        if not hashes <= MAX_HASHES:
+        if not hashes <= self.MAX_HASHES:
             return None
         self.NUM_HASHES = hashes
         self.LOCALITY_RANGE = bloomRange
