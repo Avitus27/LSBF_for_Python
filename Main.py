@@ -25,6 +25,6 @@ myBloom = randomTest()
 for i in xrange(10):
 	inputFloat = float(raw_input("test a number for approximate presence: "))
 	if myBloom.localityBloomCheck(inputFloat):
-		print("Input was in or near a value in the bloom filter")
+		print("Input was in or near a value in the bloom filter\n")
 	else:
-		print("Input was not near a value in the bloom filter")
+		print("Input was not near a value in the bloom filter\n")
