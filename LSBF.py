@@ -4,6 +4,7 @@ import math
 from bitarray import bitarray
 
 class LocalitySensitiveBloomFilter:
+    MAX_HASHES = 2 #The number of hashes currently implimented
 
     #Bloom Filter Basic Operations
     def __init__( self, floatPrecision, hashes, bloomRange, resolution ):
@@ -11,7 +12,9 @@ class LocalitySensitiveBloomFilter:
             return None # floatPrecision needs to be positive
         self.FLOAT_PRECISION = floatPrecision
         if not hashes > 0:
-            return None # We need at lest 1 hashing algorithm, upper limit is TODO
+            return None
+        if not hashes <= self.MAX_HASHES:
+            return None
         self.NUM_HASHES = hashes
         self.LOCALITY_RANGE = bloomRange
         self.LOCALITY_RESOLUTION = resolution
@@ -40,18 +43,21 @@ class LocalitySensitiveBloomFilter:
     def checkInBloom( bloomArray, input ):
         input = bloomArray.floatString.format(input)
         if bloomArray.getMD5HashPresence( input ):
-            #TODO What happens when there's only one hash
-            return bloomArray.getSHA1HashPresence( input )
+            if bloomArray.NUM_HASHES > 1:
+                return bloomArray.getSHA1HashPresence( input )
+            else:
+                return True
         return False
 
-    def localityBloomCheck( bloomArray, input, range ):
-        #TODO When there's only one hash
+    def localityBloomCheck( bloomArray, input, range=0, recursionDepth=0 ):
+        if (range == 0) and not (recursionDepth == bloomArray.LOCALITY_RANGE/bloomArray.LOCALITY_RESOLUTION):
+            range = bloomArray.LOCALITY_RANGE
         if (range < bloomArray.LOCALITY_RESOLUTION):
             return bloomArray.checkInBloom( input )
         else:
             if not bloomArray.checkInBloom( input - range ):
                 if not bloomArray.checkInBloom( input + range ):
-                    if not bloomArray.localityBloomCheck( input, range - bloomArray.LOCALITY_RESOLUTION ):
+                    if not bloomArray.localityBloomCheck( input, range - bloomArray.LOCALITY_RESOLUTION, recursionDepth+1 ):
                         return False
             return True
 
