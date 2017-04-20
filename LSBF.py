@@ -1,3 +1,5 @@
+#Author: Mervyn Galvin (113315141@umail.ucc.ie)
+
 import hashlib
 import math
 
