@@ -1,5 +1,5 @@
-# Locality Sensitive Bloom Filter (LSBF) and Python
-A recursive implimentation of LSBF in Python that can be ported to Haskell
+# Locality Sensitive Bloom Filter (LSBF) Python
+A recursive implimentation of LSBF in Python
 
 ## Required modules:
 - Python-dev
