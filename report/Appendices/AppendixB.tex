@@ -1,0 +1,33 @@
+% !TeX spellcheck = en_GB
+\chapter{A Guide to Set-up the DE0-Nano}
+
+\section{Software}
+The required software can be downloaded from the Altera website. Quarus Prime Lite is recommended, as well as ModelSim and the device drivers (Cyclone IV for the DE0-Nano) \cite{QuartusDownloadPage}
+
+\section{USB-Blaster Installation}
+The USB-Blaster is required to enable communication between the system and the FPGA device. On a Windows computer, this can be done by following these steps:
+
+\begin{enumerate}
+	\item Connect the DE0-Nano to the PC
+	\item Open the Device Manager
+	\item Open the properties page for the USB-Blaster and click "Update Driver..."
+	\item Select “Browse my computer for driver software” and navigate to the installation folder of Quartus (we\textsc{\char13}ll call it \%QuartusDir\%). Find the folder \texttt{“\%QuartusDir\%\textbackslash\{version\}\textbackslash quartus\textbackslash drivers\textbackslash usb-blaster\textbackslash x32”} and select it.
+	\item Click next and install the driver	
+\end{enumerate}
+
+The USB-Blaster will now be available in Quartus Prime, allowing the device's software to be changed.
+
+\section{Example Code}
+When the software is installed, sample code can be used to test that the system is set up correctly. The examples can be found in \\ \texttt{\%QuartusDir\%\textbackslash\{version\}\textbackslash quartus\textbackslash qdesigns}. Note that not all of these will be compatible with the DE0-Nano.
+
+When compiling, the target board needs to be set. For the DE0-Nano, you may open the project settings (Ctrl+Shift+E) and click the \textquotedblleft Device/Board\dots\textquotedblright  option on the top-right corner. In the Device family, select Cyclone IV E and type ``E22F17C6'' in the Name Filter to filter to the DE0-Nano’s on-board FPGA. Accept the settings and now you can compile for the DE0-Nano.
+
+To compile, click ``Compile'' (Ctrl+L). This may take some time to complete, depending on the complexity of the project being compiled.
+When finished compiling, one may write to the FPGA using the Programmer (Tools \textgreater  Programmer). When in the programmer, open ``Hardware Setup\dots'' and select the \textquotedblleft USB-Blaster\textquotedblright. The FPGA software will be re-written by clicking \textquotedblleft Start\textquotedblright. Note that this will only program the FPGA and not the configuration device, so when the device is powered down the program will be wiped from the FPGA’s memory and the program on the configuration device will be re-written onto the device when the device is rebooted. This is useful, however, during testing as writing to the FPGA is a lot quicker than writing to the configuration device.
+
+One may think of the configuration device as a bootstrapper, writing the program to the FPGA's main memory on boot.
+
+\section{Integrating ModelSim-Altera}
+
+
+
