@@ -1,5 +1,7 @@
 % !TeX spellcheck = en_GB
 \chapter{A Guide to Set-up the DE0-Nano}
+\lhead{\emph{Appendix B: A Guide to Set-up the DE0-Nano}}
+\label{appendix:B}
 
 \section{Software}
 The required software can be downloaded from the Altera website. Quarus Prime Lite is recommended, as well as ModelSim and the device drivers (Cyclone IV for the DE0-Nano) \cite{QuartusDownloadPage}
@@ -28,6 +30,4 @@ When finished compiling, one may write to the FPGA using the Programmer (Tools \
 One may think of the configuration device as a bootstrapper, writing the program to the FPGA's main memory on boot.
 
 \section{Integrating ModelSim-Altera}
-
-
-
+To integrate ModelSim-Altera with Quartus, open the Quartus Options (Tools \textgreater Options) and select the \textquotedblleft EDA Tool Options\textquotedblright menu. Click the three dots next to ModelSim-Altera and navigate to the ModelSim executable. This will be in the \textquotedblleft \texttt{modelsim\_ase\textbackslash win32aloem}\textquotedblright directory.
