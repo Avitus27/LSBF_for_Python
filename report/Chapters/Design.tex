@@ -1,3 +1,92 @@
 % !TeX spellcheck = en_GB
 \chapter{Design}
 \lhead{\emph{Design}}
+
+\section{Algorithm Design}
+As the project was originally intended for Haskell, it was decided that a recursive implementation of LSBF would be written for ease of porting in the future.
+
+Nested bit arrays were used as a space efficient way to store the set bits. From a high-level perspective, bits are set based on the output of the hash of the input. The number of hashes is important in determining run-time and likelihood of false positive. If a minimum false positive rate is desired while optimising the number of hashes, then $k$ depends on $m$ and the expected $n$ as given below.\cite{ProbabilityAndComputing}
+\begin{center}
+	$ k = \dfrac{m}{n}\ln 2 $
+\end{center}
+We can calculate the optimum number of hashes to use based on our tolerated probability of a false positive rate $p$ using the following formulae:\cite{1195150}
+
+\begin{center}
+	$p=\left( 1-e^{-(\frac{m}{n}\ln 2)\frac{n}{m}} \right)^{\frac{m}{n}\ln 2} $
+\end{center}
+
+which simplifies to
+
+\begin{center}
+$\ln p = -\frac{m}{n}(\ln 2)^2$
+\end{center}
+
+meaning that
+
+\begin{center}
+$m = -\dfrac{n\ln p}{(\ln 2)^2}$
+\end{center}
+
+Finally, $k$ for our desired $p$ can be derived as
+
+\begin{center}
+	$k = -\dfrac{\ln p}{\ln 2}$
+\end{center}
+
+Here, we can see that for a given $p$, $k$ only depends on $p$ and $m \propto n$.
+
+For ease of implementation two common hashes were used to prove how LSBF would work, however suggestions on more suitable hashes will follow in chapter \ref{Evaluation}: Evaluation. Additionally the above formulae work for regular Bloom filters but would need to be adapted for LSBF.
+
+\section{Pseudo code}
+
+While Mitzenmacher's Distance-Sensitive Bloom Filter has both a false positive and false negative rate, this version of LSBF makes an effort to eliminate false negative by use of rounding. In the pseudo code notation, we will use $\alpha$ to denote the upper bound for locality and $\beta$ for the rounding distance.
+
+\begin{algorithm}[H]
+	\KwIn{$ k, m , \alpha, \beta $}
+	\KwResult{ An LSBF Object}
+	\If{$k > 0$ and $m > 0$}{
+		initialize an array of $m$ zeros\;
+		store $\alpha, \beta, k$ in the object\;
+	}
+	\caption{LSBF Set Up}
+\end{algorithm}
+
+Adding an element to the LSBF is trivial in abstract. We assume that a function ``round'' exists that rounds to the nearest $\beta$, the second parameter:
+
+\begin{algorithm}[H]
+	\KwIn{input}
+	\KwResult{None}
+	\ForEach{hash, up to $k$}{
+		Set a bit in the object's array to 1 based on the result of $hash(round(input, \beta))\mod{m}$\;
+	}
+\caption{Adding an element to the LSBF}
+\end{algorithm}
+
+In order to make the next section of code easier to understand, we will state a function that hashes for each $k$ and returns True when all checked bits are set to one.
+
+Checking if a value is in the LSBF is, in this implementation, a recursive check of the space from $input - \alpha$ to $input + \alpha$ with a reduction of $\alpha$ by $\beta$ in each successive recursion until $\alpha$ is less than $\beta$.
+
+\begin{algorithm}
+	\KwIn{input, $\alpha$}
+	\KwResult{True when an iteration shows all checked bits set to one, False otherwise}
+	\eIf{$\alpha < \beta$}{
+		$i$ := 0\;
+		\While{$i < k$}{
+			\eIf{the bit given by $hash_i$(input) is one}{
+				$i$ := $i$ + 1\;
+			}{
+				\KwRet{False}
+			}
+		}
+		\KwRet{True}
+	}{
+		$i$ := 0\;
+		\While{$i < k$}{
+			\eIf{the bit given by $hash_i$(input-$\beta$) is one}{
+				$i$ := $i$ + 1\;
+			}{
+				
+			}
+		}
+	}
+\end{algorithm}

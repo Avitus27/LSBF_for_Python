@@ -10,5 +10,23 @@ The objectives of this project are to:
 	\item provide an implementation of a hashing algorithm that would be suited to the FPGA hardware
 \end{itemize}
 
-\section{Setting up the FPGA }
-The provided FPGA was the DE0 Nano\cite{DE0NanoWebpage}, a compact FPGA suited to education. Resources exist on the manufacturer webpage as well as the provided software on how to set up the device. In the interest of making it clearer to future students as to how to configure and program the device a guide was written by the student, supplied at appendix \ref{appendix:B}
+\section{A Guide to Setting up the FPGA}
+The provided FPGA was the DE0 Nano\cite{DE0NanoWebpage}, a compact FPGA suited to education. Resources exist on the manufacturer web-page as well as the provided software on how to set up the device. In the interest of making it clearer to future students as to how to configure and program the device a guide was written by the student, supplied at appendix \ref{appendix:B}
+
+\section{Hashing Investigation}
+Due to FPGAs being suited to parallel operations and the speed of their operation, hashing was the focus of this investigation. It was decided to research Distance-Sensitive Bloom Filters, based on the work of Mitzenmacher and Kirsch. \cite{DSBF} This report will be using the same constants as their paper, as well as some commonly used notation with regards Bloom Filters:
+
+\begin{tabular}{c|c}
+Symbol & Meaning \\ 
+\hline
+U & A metric set (i.e. n-dimensional tuple) \\ 
+S & A query set, $S  \subset U$ \\ 
+$\varepsilon \geq 0$& The lower bound with regards distance \\
+$\delta > \varepsilon$ & The upper bound with regards distance \\
+\hline
+$m$ & The number of bits in the array \\
+$k$ & The number of hash functions \\
+$n$ & The number of inserted elements \\
+$p$ & The false positive rate \\
+$d$ & A metric (distance function)
+\end{tabular}
