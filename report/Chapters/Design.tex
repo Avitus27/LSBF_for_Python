@@ -5,7 +5,7 @@
 \section{Algorithm Design}
 As the project was originally intended for Haskell, it was decided that a recursive implementation of LSBF would be written for ease of porting in the future.
 
-Nested bit arrays were used as a space efficient way to store the set bits. From a high-level perspective, bits are set based on the output of the hash of the input. The number of hashes is important in determining run-time and likelihood of false positive. If a minimum false positive rate is desired while optimising the number of hashes, then $k$ depends on $m$ and the expected $n$ as given below.\cite{ProbabilityAndComputing}
+Nested bit arrays were used as a space efficient way to store the set bits. From a high-level perspective, bits are set based on the output of the hash of the input, $hash_i(input)$. The number of hashes is important in determining run-time and likelihood of false positive. If a minimum false positive rate is desired while optimising the number of hashes, then $k$ depends on $m$ and the expected $n$ as given below.\cite{ProbabilityAndComputing}
 \begin{center}
 	$ k = \dfrac{m}{n}\ln 2 $
 \end{center}
@@ -33,13 +33,13 @@ Finally, $k$ for our desired $p$ can be derived as
 	$k = -\dfrac{\ln p}{\ln 2}$
 \end{center}
 
-Here, we can see that for a given $p$, $k$ only depends on $p$ and $m \propto n$.
+Here, we can see that for a given $p$, $k$ only depends on $p$, and $m \propto n$.
 
-For ease of implementation two common hashes were used to prove how LSBF would work, however suggestions on more suitable hashes will follow in chapter \ref{Evaluation}: Evaluation. Additionally the above formulae work for regular Bloom filters but would need to be adapted for LSBF.
+For ease of implementation two common hashes were used to prove how LSBF would work, however suggestions on more suitable hashes will follow in Chapter \ref{Evaluation}: Evaluation. Additionally the above formulae work for regular Bloom filters but would need to be adapted for LSBF. However, for establishing a rough baseline, this would do fine.
 
-\section{Pseudo code}
+\section{Pseudocode}
 
-While Mitzenmacher's Distance-Sensitive Bloom Filter has both a false positive and false negative rate, this version of LSBF makes an effort to eliminate false negative by use of rounding. In the pseudo code notation, we will use $\alpha$ to denote the upper bound for locality and $\beta$ for the rounding distance.
+While Mitzenmacher's Distance-Sensitive Bloom Filter has both a false positive and false negative rate\cite{DSBF}, this version of LSBF makes an effort to eliminate false negative by use of rounding. In the pseudocode notation, we will use $\alpha$ to denote the upper bound for locality and $\beta$ for the rounding distance.
 
 \begin{algorithm}[H]
 	\KwIn{$ k, m , \alpha, \beta $}
@@ -47,46 +47,106 @@ While Mitzenmacher's Distance-Sensitive Bloom Filter has both a false positive a
 	\If{$k > 0$ and $m > 0$}{
 		initialize an array of $m$ zeros\;
 		store $\alpha, \beta, k$ in the object\;
+		\KwRet{a reference to new LSBF object}
 	}
-	\caption{LSBF Set Up}
+	\caption{LSBF($k, m, \alpha, \beta$), LSBF Set Up}
 \end{algorithm}
 
 Adding an element to the LSBF is trivial in abstract. We assume that a function ``round'' exists that rounds to the nearest $\beta$, the second parameter:
 
 \begin{algorithm}[H]
 	\KwIn{input}
-	\KwResult{None}
+	\KwResult{None}	
+	$input$ := $round(input, \beta)$\;
 	\ForEach{hash, up to $k$}{
-		Set a bit in the object's array to 1 based on the result of $hash(round(input, \beta))\mod{m}$\;
+		Set a bit in the object's array to 1 based on the result of \\
+		$\;\;hash(input)\mod{m}$\;
 	}
-\caption{Adding an element to the LSBF}
+\caption{add($ input $),Adding an element to the LSBF}
 \end{algorithm}
 
-In order to make the next section of code easier to understand, we will state a function that hashes for each $k$ and returns True when all checked bits are set to one.
+In order to make the next section of code easier to understand, we will state a function, $checkInput$, that hashes for each $k$ and returns True when all checked bits are set to one.
+
+\begin{algorithm}
+	\KwIn{input}
+	\KwResult{True when the bits defined by $hash_i(input)$ are all one for every $i$, False otherwise}
+	$input$ := $round(input, \beta)$\;
+	$i$ := 0\;
+	\While{$i < k$}{
+		\eIf{the bit given by $hash_i$(input) is one}{
+			$i$ := $i$ + 1\;
+		}{
+			\KwRet{False}
+		}
+	}
+	\KwRet{True}
+	\caption{checkInput($ input $), Checking bits when testing for presence}
+\end{algorithm}
 
 Checking if a value is in the LSBF is, in this implementation, a recursive check of the space from $input - \alpha$ to $input + \alpha$ with a reduction of $\alpha$ by $\beta$ in each successive recursion until $\alpha$ is less than $\beta$.
 
-\begin{algorithm}
+\begin{algorithm}[H]
 	\KwIn{input, $\alpha$}
 	\KwResult{True when an iteration shows all checked bits set to one, False otherwise}
+	$input$ := $round(input, \beta)$
+	
 	\eIf{$\alpha < \beta$}{
-		$i$ := 0\;
-		\While{$i < k$}{
-			\eIf{the bit given by $hash_i$(input) is one}{
-				$i$ := $i$ + 1\;
-			}{
-				\KwRet{False}
+		\KwRet{$checkInput(input)$}
+	}{
+		\If{not $checkInput(input-\beta)$}{
+			\If{not $checkInput(input + \beta)$}{
+				\If{not $recursiveInputCheck(input, \alpha - \beta)$}
+				{\KwRet{False}}
 			}
 		}
 		\KwRet{True}
-	}{
-		$i$ := 0\;
-		\While{$i < k$}{
-			\eIf{the bit given by $hash_i$(input-$\beta$) is one}{
-				$i$ := $i$ + 1\;
-			}{
-				
-			}
-		}
 	}
+\caption{recursiveInputCheck(input, $\alpha$)}
 \end{algorithm}
+
+\section{Example}
+
+To illustrate this algorithm in action, we will run through an example here. This will follow a Python-like syntax, but will not be actual Python code.
+
+\begin{lstlisting}[language=bash]
+  #Creates an LSBF object that uses 2 hashes, has a bit space of 10000,
+  # and will check whole numbers in a range plus-minus 5 the query value
+  > myLSBF = LSBF(2, 10000, 5, 1)
+  
+  #Add values to the filter
+  > myLSBF.add(12) #now up to 2 bits are set
+  > myLSBF.add(42) #up to 4 bits are set
+  
+  #We may use this as a normal Bloom Filter
+  > myLSBF.checkInput(12)
+  < True
+  > myLSBF.checkInput(14)
+  < False
+  
+  #But it also rounds to the nearest whole number
+  > myLSBF.checkInput(22.1)
+  < Checking 12: True
+  
+  #Now the recursive locality check with some verbose output
+  #An actual implementation would use the already defined alpha, as in Appendix A
+  > myLSBF.recursiveInputCheck(12, 5)
+  < Alpha: 5; Beta:1;
+  < Checking (12 - 5): False
+  < Checking (12 - 5): False
+  < Alpha: 4; Beta:1;
+  < Checking (12 - 4): False
+  < Checking (12 - 4): False
+  < Alpha: 3; Beta:1;
+  < Checking (12 - 3): False
+  < Checking (12 - 3): False
+  < Alpha: 2; Beta:1;
+  < Checking (12 - 2): False
+  < Checking (12 - 2): False
+  < Alpha: 1; Beta:1;
+  < Checking (12 - 1): False
+  < Checking (12 - 1): False
+  < Alpha: 0; Beta:1;
+  < Alpha < Beta; Checking 12: True
+  
+  
+\end{lstlisting}

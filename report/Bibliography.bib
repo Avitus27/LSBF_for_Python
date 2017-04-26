@@ -1,5 +1,5 @@
 % !TeX spellcheck = en_GB
-@proceedings{DSBF,
+@article{DSBF,
 	Abstract = {A Bloom filter is a space-efficient data structure that	answers set membership queries with some chance of	a false positive. We introduce the problem of designing	generalizations of Bloom filters designed to answer	queries of the form, “Is x close to an element of S?”	where closeness is measured under a suitable metric. Such a data structure would have several natural applications in networking and database applications. We demonstrate how appropriate data structures	can be designed using locality-sensitive hash functions	as a building block, and we specifically analyze the performance of a natural scheme under the Hamming metric.},
 	Author = {A. Kirsch and M. Mitzenmacher},
 	Journal = {Proceedings of the Meeting on Algorithm Engineering and Experiments},
@@ -22,7 +22,7 @@
 	Url = {http://dl.acm.org/citation.cfm?id=1327494},
 	Year = {2008}}
 
-@proceedings{LSH,
+@article{LSH,
 	Abstract = {We show the existence of a Locality-Sensitive Hashing (LSH) family for the angular distance that yields an approximate Near Neighbor Search algorithm with the asymptotically optimal running time exponent. Unlike earlier algorithms with this property (e.g., Spherical LSH [1, 2]), our algorithm is also practical, improving upon the well-studied hyperplane LSH [3] in practice. We also introduce a multiprobe version of this algorithm and conduct an experimental evaluation on real and synthetic data sets. We complement the above positive results with a fine-grained lower bound for the quality of any LSH family for angular distance. Our lower bound implies that the above LSH family exhibits a trade-off between evaluation time and quality that is close to optimal for a natural class of LSH functions.},
 	Author = {A. Andoni and P. Indyk and T. Laarhoven and I. Razenshteyn and L.Schmidt},
 	Journal = {Proceedings of the 29th Annual Conference on Neural Information Processing Systems},
@@ -63,3 +63,21 @@
 	doi={10.1109/TMC.2003.1195150}, 
 	ISSN={1536-1233}, 
 	month={Jan},}
+
+@misc{bitarray,
+	title={bitarray 0.8.1 : Python Package Index},
+	howpublished={\url{https://pypi.python.org/pypi/bitarray/}},
+	year={2013}
+}
+
+@misc{myhdl,
+	title={MyHDL},
+	howpublished={\url{http://www.myhdl.org/}},
+	year={2015}
+}
+
+@misc{MurmurvsCryptoSpeed,
+	title={Some performance tweaks by vmg - Pull Request 19 - bitly/dablooms},
+	howpublished={\url{https://github.com/bitly/dablooms/pull/19}},
+	year={2012}
+}

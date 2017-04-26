@@ -1,3 +1,15 @@
 % !TeX spellcheck = en_GB
 \chapter{Implementation}
 \lhead{\emph{Implementation}}
+
+\section{Language and Libraries}
+The programming language Python was chosen for its ease of prototyping and vast libraries covering most required functionality. Python version 2.7 was used as most libraries support it and there is extensive documentation for it online.
+
+The libraries $math$ and $hashlib$ are native to Python and imported for some basic mathematical functionality and to make use of some built-in hashing algorithms. The library ``$bitarray$'' is an efficient object type representing an array of booleans. It is implemented in C and abstracted to Python for use in Python programs. \cite{bitarray} It offers much functionality but the small memory footprint is of most use to this project.
+
+Regarding possible future work a library, MyHDL, is available for Python. The most recent release adds support for Python 3. This library allows for code written in Python to be converted to VHDL for writing to an FPGA or ASIC. \cite{myhdl} As previously mentioned, to program with VHDL in mind would require experience in VHDL. Nonetheless, this package demonstrates that it is possible to effectively convert a Python MyHDL design to VHDL. MyHDL could become an integrated part of an effective workflow for a student that wishes to investigate this further.
+
+\section{Development and Testing}
+A class was written in Python that implements the algorithm from Chapter 3 and is attached at Appendix \ref{appendix:A}. For simplicity and to avoid clashes 65,536 bitarrays of length 65,536 are used for the Bloom filter, giving $m = 4,294,967,296$. The bit array in this case uses around 500 Megabytes. This is easy to use as we can just take the first 16 bits of a hash to find the position of the first array and the next 16 bits to select a bit in that array. In retrospect, using modulo on the result of the hash would have been an easier solution.
+ 
+Two hash functions, SHA1 and MD5 were used. Chapter \ref{Evaluation} contains the criticisms of this approach and suggested alternative.

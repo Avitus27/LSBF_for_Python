@@ -2,3 +2,7 @@
 \chapter{Evaluation}
 \lhead{\emph{Evaluation}}
 \label{Evaluation}
+
+\section{Hash Functions}
+
+Two hash functions were chosen to generate the hashes, SHA1 and MD5. MD5 is not considered cryptographically safe, but this doesn't matter in a Bloom filter, we just need a hash function that is uniform in its distribution and independent. MD5 is also a quick cryptographic hash so is of particular use to us in a Bloom filter. That being said, there is strong evidence that MurmurHash is a good hash to use in Bloom filters \cite{MurmurvsCryptoSpeed}
