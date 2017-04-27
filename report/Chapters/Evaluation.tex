@@ -5,4 +5,58 @@
 
 \section{Hash Functions}
 
-Two hash functions were chosen to generate the hashes, SHA1 and MD5. MD5 is not considered cryptographically safe, but this doesn't matter in a Bloom filter, we just need a hash function that is uniform in its distribution and independent. MD5 is also a quick cryptographic hash so is of particular use to us in a Bloom filter. That being said, there is strong evidence that MurmurHash is a good hash to use in Bloom filters \cite{MurmurvsCryptoSpeed}
+Two hash functions were chosen to generate the hashes, SHA1 and MD5. MD5 is not considered cryptographically safe, but this doesn't matter in a Bloom filter, we just need a hash function that is uniform in its distribution and independent. MD5 is also a quick cryptographic hash so is of particular use to us in a Bloom filter. That being said, there is strong evidence that MurmurHash is a good hash to use in Bloom filters \cite{MurmurvsCryptoSpeed} despite not being considered a cryptographic hash
+
+Looking at real world implementations of Bloom filters, it's clear that a better approach would've been to use the whole length of a 64-bit hash, splitting it up into four 16 bit indices.\cite{SquidBloom}
+
+Considering all this, it is extremely likely that better results for LSBF would be obtained by making use of the aforementioned techniques.
+
+\section{Speed Comparison}
+
+A linear search has a $\mathcal{O}(n)$ time complexity on average which is comparable to the non-LSBF search function that was implemented for comparison, attached at Appendix \ref{appendix:C}.
+
+LSBF on the other hand runs in $\mathcal{O}(\dfrac{k\alpha}{\beta}+k); 0 \leq \alpha < \beta; k \geq 1$ worst case with a constant space complexity of $\mathcal{O}(m)$. However, if the hash algorithm is computationally expensive (like SHA1) each $k$ will take a long time.
+
+Using the timing demonstration in Appendix \ref{appendix:C}, we can see that for a large $n$ LSBF would start to outperform linear search. However, it should be noted that this approach to testing execution time is influenced by system load and is a naive implementation. The tests were re-run using Python's $timeit$ which only takes into account CPU time and is best practice for execution time comparison. The following results were obtained:
+
+\begin{tabular}{|c|c|}
+	\hline 
+	\textbf{Algorithm} & \textbf{Execution Time} \\ 
+	\hline 
+	Iterative & 42.044 $ \mu $s \\ 
+	\hline 
+	LSBF (2 Hashes)& 63.502 $ \mu $s \\ 
+	\hline 
+	LSBF (MD5 only)& 53.435 $ \mu $s \\ 
+	\hline 
+\end{tabular} 
+
+Each method was run using $timeit.repeat$ with a value $number=10000$ and randomly generated numbers in the range 0 -- 10000 tested as the query and 1000 values stored. It appears here that Iterative performs the best but when we increase $ n $ to 100,000 we can see something interesting.
+
+\begin{tabular}{|c|c|}
+	\hline 
+	\textbf{Algorithm} & \textbf{Execution Time} \\ 
+	\hline 
+	Iterative & 58.434 $ \mu $s \\ 
+	\hline 
+	LSBF (2 Hashes)& 15.988 $ \mu $s \\ 
+	\hline 
+	LSBF (MD5 only)& 9.821 $ \mu $s \\ 
+	\hline 
+\end{tabular} 
+
+Here, LSBF vastly outperforms an iterative approach, likely due to the fact that $n$ has increased beyond the range of the numbers we're picking from. This shows how effective LSBF is when a positive result is likely. With the range of numbers randomly selected increased to 0 -- 10,000,000 we see this:
+
+\begin{tabular}{|c|c|}
+	\hline 
+	\textbf{Algorithm} & \textbf{Execution Time} \\ 
+	\hline 
+	Iterative & 6941.92886 $ \mu $s \\ 
+	\hline 
+	LSBF (2 Hashes)& 29.389 $ \mu $s \\ 
+	\hline 
+	LSBF (MD5 only)& 19.419 $ \mu $s \\ 
+	\hline 
+\end{tabular} 
+
+This final result shows that for a large range and large $n$, LSBF still outperforms an iterative search. It should be noted, however, that false positives weren't checked in these timings.

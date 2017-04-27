@@ -1,3 +1,8 @@
 % !TeX spellcheck = en_GB
 \chapter{Conclusions}
 \lhead{\emph{Conclusions}}
+
+LSBF shows lot of promise as a method to quickly find if a similar value is in a set. Multiple dimensions will add more complexity to the execution time and algorithm overall, but is doable and may also prove a beneficial endeavour.
+
+\section{Future Work}
+Research in the field of Locality Sensitive Hashing is ongoing with promising space and time efficiency being shown of $ \mathcal{O}(n^{1+p}/p_1 +dn) $ and $ \mathcal{O}(d\cdot n^p/p_1) $ respectively, where $p_1$ is the lower bound of $p$. \cite{LSH} Implementing a hashing algorithm based on this research or the work of Andoni and Indyk \cite{NearestNeighborHighDimensions} would have vast applications in image recognition, databases, IP traceback and DNA sequencing. \cite{DSBF}
